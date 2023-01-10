@@ -7,6 +7,8 @@ class User < ApplicationRecord
 
     validates :email, format: {with: URI::MailTo::EMAIL_REGEXP}, presence: true, uniqueness: true
 
+    MAILER_FROM_EMAIL = "no-reply@example.com"
+
     def confirm!
         update_columns(confirmed_at: Time.current)
     end
@@ -21,6 +23,11 @@ class User < ApplicationRecord
 
     def unconfirmed?
         !confirmed?
+    end
+
+    def send_confirmation_email!
+        confirmation_token = generate_confirmation_token
+        UserMailer.confirmation(self, confirmation_token).deliver_now
     end
 
     private

@@ -3,6 +3,7 @@ class User < ApplicationRecord
     PASSWORD_RESET_TOKEN_EXPIRATION = 10.minutes
 
     has_secure_password
+    has_many :active_sessions, dependent: :destroy
 
     attr_accessor :current_password
 
